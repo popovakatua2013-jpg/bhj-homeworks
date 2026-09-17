@@ -1,4 +1,4 @@
-const timerElement = document.querySelector('.timer');
+const timerElement = document.getElementById('timer');
 let seconds = parseInt(timerElement.textContent, 10);
 
 const timerId = setInterval(() => {
