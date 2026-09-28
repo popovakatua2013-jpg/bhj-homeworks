@@ -51,3 +51,4 @@ xhr.addEventListener('error', () => {
 });
 
 xhr.send();
+EOF
