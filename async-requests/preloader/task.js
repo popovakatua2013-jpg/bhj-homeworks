@@ -1,70 +1,53 @@
-const pollTitle = document.getElementById('poll__title');
-const pollAnswers = document.getElementById('poll__answers');
+const sourceUrl = 'https://students.netoservices.ru/nestjs-backend/slow-get-courses';
+const items = document.getElementById('items');
+const loader = document.getElementById('loader');
 
 const xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://students.netoservices.ru/nestjs-backend/poll');
+xhr.open('GET', sourceUrl, true);
 xhr.responseType = 'json';
 
 xhr.addEventListener('load', () => {
   if (xhr.status !== 200) {
-    console.error('Ошибка HTTP при загрузке опроса:', xhr.status);
+    console.error('Ошибка HTTP:', xhr.status);
+    loader.classList.remove('loader_active');
     return;
   }
 
-  const response = xhr.response;
-  const pollId = response.id;
-  const pollData = response.data;
+  items.innerHTML = '';
 
-  pollTitle.textContent = pollData.title;
+  const valutes = xhr.response.response.Valute;
 
-  pollAnswers.innerHTML = '';
+  Object.keys(valutes).forEach((key) => {
+    const valute = valutes[key];
 
-  pollData.answers.forEach((answer, index) => {
-    const button = document.createElement('button');
-    button.className = 'poll__answer';
-    button.textContent = answer;
+    const item = document.createElement('div');
+    item.className = 'item';
 
-    button.addEventListener('click', () => {
+    const code = document.createElement('div');
+    code.className = 'item__code';
+    code.textContent = valute.CharCode;
 
-      alert('Спасибо, ваш голос засчитан!');
+    const value = document.createElement('div');
+    value.className = 'item__value';
+    value.textContent = valute.Value;
 
-      const postXhr = new XMLHttpRequest();
-      postXhr.open('POST', 'https://students.netoservices.ru/nestjs-backend/poll');
-      postXhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      postXhr.responseType = 'json';
+    const currency = document.createElement('div');
+    currency.className = 'item__currency';
+    currency.textContent = 'руб.';
 
-      postXhr.addEventListener('load', () => {
-        if (postXhr.status !== 200) {
-          console.error('Ошибка при голосовании:', postXhr.status);
-          return;
-        }
+    item.appendChild(code);
+    item.appendChild(value);
+    item.appendChild(currency);
 
-        const stat = postXhr.response.stat;
-
-        pollAnswers.innerHTML = '';
-
-        stat.forEach((item) => {
-          const resultItem = document.createElement('div');
-          resultItem.className = 'poll__answer-result';
-          resultItem.textContent = `${item.answer}: ${item.votes} голосов`;
-          resultItem.style.margin = '8px 0';
-          pollAnswers.appendChild(resultItem);
-        });
-      });
-
-      postXhr.addEventListener('error', () => {
-        console.error('Сетевая ошибка при голосовании');
-      });
-
-      postXhr.send(`vote=${pollId}&answer=${index}`);
-    });
-
-    pollAnswers.appendChild(button);
+    items.appendChild(item);
   });
+
+  loader.classList.remove('loader_active');
 });
 
 xhr.addEventListener('error', () => {
-  console.error('Сетевая ошибка при загрузке опроса');
+  console.error('Сетевая ошибка при загрузке курсов');
+  loader.classList.remove('loader_active');
 });
 
 xhr.send();
