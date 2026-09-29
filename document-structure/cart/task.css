@@ -89,3 +89,34 @@ body {
 .product-shadow {
   position: absolute;
 }
+
+.flying-image {
+  position: absolute;
+  z-index: 100;
+  pointer-events: none;
+  object-fit: contain;
+}
+
+.cart__product {
+  position: relative;
+}
+
+.cart__product-remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.cart__product-remove:hover {
+  background: #e74c3c;
+}
